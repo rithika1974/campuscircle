@@ -16,6 +16,7 @@ export const AddProductModal = ({ open, onClose, onAdd }: AddProductModalProps) 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
+  const [imagePreview, setImagePreview] = useState<string>("");
 
   const handleSubmit = () => {
     if (!name || !price) {
@@ -28,13 +29,14 @@ export const AddProductModal = ({ open, onClose, onAdd }: AddProductModalProps) 
       price: parseInt(price),
       description,
       seller: "You",
-      image: "/placeholder.svg",
+      image: imagePreview || "/placeholder.svg",
     });
 
     toast.success("Product added successfully!");
     setName("");
     setPrice("");
     setDescription("");
+    setImagePreview("");
     onClose();
   };
 
@@ -76,6 +78,32 @@ export const AddProductModal = ({ open, onClose, onAdd }: AddProductModalProps) 
               placeholder="Describe your item..."
               rows={3}
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="image">Upload Image</Label>
+            <Input
+              id="image"
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setImagePreview(reader.result as string);
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+            />
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="w-full h-32 object-cover rounded-md mt-2"
+              />
+            )}
           </div>
           
           <Button onClick={handleSubmit} className="w-full">

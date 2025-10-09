@@ -4,6 +4,7 @@ import { Plus, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AddLostFoundModal } from "@/components/AddLostFoundModal";
+import { ChatModal } from "@/components/ChatModal";
 import lostItemImg from "@/assets/lost-item-sample.png";
 
 const sampleLostItems = [
@@ -11,7 +12,7 @@ const sampleLostItems = [
     id: 1,
     name: "Black Water Bottle",
     description: "Lost near library on 5th floor",
-    contact: "Arun - 9876543210",
+    reporter: "Arun",
     image: lostItemImg,
     type: "lost",
   },
@@ -19,7 +20,7 @@ const sampleLostItems = [
     id: 2,
     name: "Blue Notebook",
     description: "Engineering notes inside",
-    contact: "Meera - 9123456780",
+    reporter: "Meera",
     image: lostItemImg,
     type: "lost",
   },
@@ -30,7 +31,7 @@ const sampleFoundItems = [
     id: 3,
     name: "Student ID Card",
     description: "Found near cafeteria",
-    contact: "Security Office",
+    reporter: "Security Office",
     image: lostItemImg,
     type: "found",
   },
@@ -39,6 +40,8 @@ const sampleFoundItems = [
 const LostFound = () => {
   const navigate = useNavigate();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showChatModal, setShowChatModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
   const [lostItems, setLostItems] = useState(sampleLostItems);
   const [foundItems, setFoundItems] = useState(sampleFoundItems);
 
@@ -51,12 +54,18 @@ const LostFound = () => {
   };
 
   const ItemCard = ({ item }: { item: any }) => (
-    <div className="bg-card rounded-xl shadow-[var(--card-shadow)] hover:shadow-[var(--card-hover-shadow)] transition-all overflow-hidden">
+    <div 
+      onClick={() => {
+        setSelectedItem(item);
+        setShowChatModal(true);
+      }}
+      className="bg-card rounded-xl shadow-[var(--card-shadow)] hover:shadow-[var(--card-hover-shadow)] transition-all overflow-hidden cursor-pointer"
+    >
       <img src={item.image} alt={item.name} className="w-full h-48 object-cover" />
       <div className="p-4">
         <h3 className="font-semibold text-foreground mb-2">{item.name}</h3>
         <p className="text-sm text-muted-foreground mb-2">{item.description}</p>
-        <p className="text-sm text-primary font-medium">Contact: {item.contact}</p>
+        <p className="text-sm text-primary font-medium">Reporter: {item.reporter}</p>
       </div>
     </div>
   );
@@ -116,6 +125,15 @@ const LostFound = () => {
         onClose={() => setShowAddModal(false)}
         onAdd={handleAddItem}
       />
+
+      {selectedItem && (
+        <ChatModal
+          open={showChatModal}
+          onClose={() => setShowChatModal(false)}
+          itemName={selectedItem.name}
+          otherUser={selectedItem.reporter}
+        />
+      )}
     </div>
   );
 };

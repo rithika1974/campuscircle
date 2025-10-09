@@ -3,6 +3,7 @@ import { Navigation } from "@/components/Navigation";
 import { Plus, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AddProductModal } from "@/components/AddProductModal";
+import { ChatModal } from "@/components/ChatModal";
 import productImg1 from "@/assets/product-sample-1.png";
 import productImg2 from "@/assets/product-sample-2.png";
 
@@ -40,6 +41,8 @@ const sampleProducts = [
 const Marketplace = () => {
   const navigate = useNavigate();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showChatModal, setShowChatModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
   const [products, setProducts] = useState(sampleProducts);
 
   const handleAddProduct = (product: any) => {
@@ -66,7 +69,11 @@ const Marketplace = () => {
             {products.map((product) => (
               <div
                 key={product.id}
-                className="bg-card rounded-xl shadow-[var(--card-shadow)] hover:shadow-[var(--card-hover-shadow)] transition-all overflow-hidden"
+                onClick={() => {
+                  setSelectedProduct(product);
+                  setShowChatModal(true);
+                }}
+                className="bg-card rounded-xl shadow-[var(--card-shadow)] hover:shadow-[var(--card-hover-shadow)] transition-all overflow-hidden cursor-pointer"
               >
                 <img
                   src={product.image}
@@ -96,6 +103,15 @@ const Marketplace = () => {
         onClose={() => setShowAddModal(false)}
         onAdd={handleAddProduct}
       />
+
+      {selectedProduct && (
+        <ChatModal
+          open={showChatModal}
+          onClose={() => setShowChatModal(false)}
+          itemName={selectedProduct.name}
+          otherUser={selectedProduct.seller}
+        />
+      )}
     </div>
   );
 };

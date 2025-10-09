@@ -16,11 +16,11 @@ interface AddLostFoundModalProps {
 export const AddLostFoundModal = ({ open, onClose, onAdd }: AddLostFoundModalProps) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [contact, setContact] = useState("");
   const [type, setType] = useState("lost");
+  const [imagePreview, setImagePreview] = useState<string>("");
 
   const handleSubmit = () => {
-    if (!name || !description || !contact) {
+    if (!name || !description) {
       toast.error("Please fill in all fields");
       return;
     }
@@ -28,16 +28,15 @@ export const AddLostFoundModal = ({ open, onClose, onAdd }: AddLostFoundModalPro
     onAdd({
       name,
       description,
-      contact,
       type,
-      image: "/placeholder.svg",
+      image: imagePreview || "/placeholder.svg",
     });
 
     toast.success(`${type === "lost" ? "Lost" : "Found"} item reported successfully!`);
     setName("");
     setDescription("");
-    setContact("");
     setType("lost");
+    setImagePreview("");
     onClose();
   };
 
@@ -83,15 +82,31 @@ export const AddLostFoundModal = ({ open, onClose, onAdd }: AddLostFoundModalPro
               rows={3}
             />
           </div>
-          
+
           <div className="space-y-2">
-            <Label htmlFor="contact">Contact Information</Label>
+            <Label htmlFor="image">Upload Image</Label>
             <Input
-              id="contact"
-              value={contact}
-              onChange={(e) => setContact(e.target.value)}
-              placeholder="Your name and phone number"
+              id="image"
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setImagePreview(reader.result as string);
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
             />
+            {imagePreview && (
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="w-full h-32 object-cover rounded-md mt-2"
+              />
+            )}
           </div>
           
           <Button onClick={handleSubmit} className="w-full">
