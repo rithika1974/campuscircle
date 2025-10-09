@@ -6,21 +6,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AddLostFoundModal } from "@/components/AddLostFoundModal";
 import { ChatModal } from "@/components/ChatModal";
 import lostItemImg from "@/assets/lost-item-sample.png";
+import studentIdImg from "@/assets/student-id.png";
 
 const sampleLostItems = [
   {
     id: 1,
     name: "Black Water Bottle",
     description: "Lost near library on 5th floor",
-    reporter: "Arun",
-    image: lostItemImg,
-    type: "lost",
-  },
-  {
-    id: 2,
-    name: "Blue Notebook",
-    description: "Engineering notes inside",
-    reporter: "Meera",
+    reporter: "Sarcasticpingu",
     image: lostItemImg,
     type: "lost",
   },
@@ -28,11 +21,11 @@ const sampleLostItems = [
 
 const sampleFoundItems = [
   {
-    id: 3,
+    id: 2,
     name: "Student ID Card",
     description: "Found near cafeteria",
-    reporter: "Security Office",
-    image: lostItemImg,
+    reporter: "Sarcasticpingu",
+    image: studentIdImg,
     type: "found",
   },
 ];
