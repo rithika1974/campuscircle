@@ -1,11 +1,14 @@
 import { useState } from "react";
-import { User } from "lucide-react";
+import { User, LogIn } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import campusLogo from "@/assets/campus-circle-logo.png";
 import maheLogo from "@/assets/mahe-logo.png";
 import { ProfileModal } from "./ProfileModal";
+import { Button } from "./ui/button";
 
 export const Navigation = () => {
   const [showProfile, setShowProfile] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -22,12 +25,24 @@ export const Navigation = () => {
             
             <img src={maheLogo} alt="MAHE" className="h-16 w-16" />
             
-            <button
-              onClick={() => setShowProfile(true)}
-              className="p-2 rounded-full bg-secondary hover:bg-accent transition-colors"
-            >
-              <User className="h-6 w-6 text-secondary-foreground" />
-            </button>
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={() => navigate('/auth')}
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                <LogIn className="h-4 w-4" />
+                Login
+              </Button>
+              
+              <button
+                onClick={() => setShowProfile(true)}
+                className="p-2 rounded-full bg-secondary hover:bg-accent transition-colors"
+              >
+                <User className="h-6 w-6 text-secondary-foreground" />
+              </button>
+            </div>
           </div>
         </div>
       </nav>
