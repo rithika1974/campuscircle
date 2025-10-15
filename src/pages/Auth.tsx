@@ -14,23 +14,25 @@ const Auth = () => {
     setIsLoading(true);
     
     try {
-      // This will be implemented once you configure Azure in Supabase Cloud
-      // For now, we'll show a message about configuration
-      toast({
-        title: "Microsoft Login",
-        description: "Please configure Azure AD in your Cloud settings first.",
-      });
-      
-      // Uncomment this once Azure is configured in Supabase:
+      // Dummy login for testing - navigates directly to dashboard
+      // Replace with actual Azure auth later:
       // const { data, error } = await supabase.auth.signInWithOAuth({
       //   provider: 'azure',
       //   options: {
       //     scopes: 'email',
       //   }
       // });
-      // 
       // if (error) throw error;
-      // navigate('/');
+      
+      // Simulate loading
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast({
+        title: "Login Successful",
+        description: "Welcome to Campus Circle!",
+      });
+      
+      navigate('/');
     } catch (error: any) {
       toast({
         title: "Error",
