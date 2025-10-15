@@ -1,14 +1,49 @@
-import { useState } from "react";
-import { User, LogIn } from "lucide-react";
+import { useState, useEffect } from "react";
+import { User, LogIn, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import campusLogo from "@/assets/campus-circle-logo.png";
 import maheLogo from "@/assets/mahe-logo.png";
 import { ProfileModal } from "./ProfileModal";
 import { Button } from "./ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export const Navigation = () => {
   const [showProfile, setShowProfile] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Check login state on mount
+    const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    setIsLoggedIn(loggedIn);
+
+    // Listen for storage changes (login/logout from other tabs)
+    const handleStorageChange = () => {
+      const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      setIsLoggedIn(loggedIn);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    // Custom event for same-tab updates
+    window.addEventListener('authChange', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('authChange', handleStorageChange);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    setIsLoggedIn(false);
+    window.dispatchEvent(new Event('authChange'));
+    toast({
+      title: "Logged out",
+      description: "You have been successfully logged out.",
+    });
+    navigate('/');
+  };
 
   return (
     <>
@@ -26,15 +61,27 @@ export const Navigation = () => {
             <img src={maheLogo} alt="MAHE" className="h-16 w-16" />
             
             <div className="flex items-center gap-3">
-              <Button
-                onClick={() => navigate('/auth')}
-                variant="outline"
-                size="sm"
-                className="gap-2"
-              >
-                <LogIn className="h-4 w-4" />
-                Login
-              </Button>
+              {!isLoggedIn ? (
+                <Button
+                  onClick={() => navigate('/auth')}
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                >
+                  <LogIn className="h-4 w-4" />
+                  Login
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleLogout}
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </Button>
+              )}
               
               <button
                 onClick={() => setShowProfile(true)}

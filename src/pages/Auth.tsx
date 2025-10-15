@@ -27,6 +27,10 @@ const Auth = () => {
       // Simulate loading
       await new Promise(resolve => setTimeout(resolve, 1000));
       
+      // Store dummy login state
+      localStorage.setItem('isLoggedIn', 'true');
+      window.dispatchEvent(new Event('authChange'));
+      
       toast({
         title: "Login Successful",
         description: "Welcome to Campus Circle!",
